@@ -1,0 +1,6 @@
+logging:
+  level: INFO
+  loggers:
+    com.ashok: DEBUG
+
+applicationName: MyDropwizardApp
