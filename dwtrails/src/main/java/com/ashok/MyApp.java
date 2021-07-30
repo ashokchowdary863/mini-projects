@@ -6,15 +6,17 @@ import com.ashok.resources.CounterResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.federecio.dropwizard.swagger.SwaggerBundle;
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.dropwizard.DropwizardExports;
 import io.prometheus.client.exporter.MetricsServlet;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 
-public class MyApplication extends Application<MyAppConfig> {
+public class MyApp extends Application<AppConfig> {
 
     public static void main(final String[] args) throws Exception {
-        new MyApplication().run(args);
+        new MyApp().run(args);
     }
 
     @Override
@@ -23,17 +25,22 @@ public class MyApplication extends Application<MyAppConfig> {
     }
 
     @Override
-    public void initialize(final Bootstrap<MyAppConfig> bootstrap) {
+    public void initialize(final Bootstrap<AppConfig> bootstrap) {
         GuiceBundle guiceBundle =  GuiceBundle.builder().
                 modules(new MyGuiceModule()).build();
         bootstrap.addBundle(guiceBundle);
+
+        bootstrap.addBundle(new SwaggerBundle<AppConfig>() {
+            @Override
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(AppConfig configuration) {
+                return configuration.getSwaggerBundleConfiguration();
+            }
+        });
     }
 
     @Override
-    public void run(final MyAppConfig configuration,
+    public void run(final AppConfig configuration,
                     final Environment environment) {
-        final CounterResource counterResource = new CounterResource(configuration.getApplicationName());
-        environment.jersey().register(counterResource);
         final DefaultCheck defaultCheck = new DefaultCheck();
         environment.healthChecks().register("default", defaultCheck);
         registerMetrics(environment);
