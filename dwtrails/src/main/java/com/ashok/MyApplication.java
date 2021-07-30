@@ -1,5 +1,6 @@
 package com.ashok;
 
+import com.ashok.guice.MyGuiceModule;
 import com.ashok.health.DefaultCheck;
 import com.ashok.resources.CounterResource;
 import io.dropwizard.Application;
@@ -8,6 +9,8 @@ import io.dropwizard.setup.Environment;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.dropwizard.DropwizardExports;
 import io.prometheus.client.exporter.MetricsServlet;
+import ru.vyarus.dropwizard.guice.GuiceBundle;
+
 public class MyApplication extends Application<MyAppConfig> {
 
     public static void main(final String[] args) throws Exception {
@@ -16,12 +19,14 @@ public class MyApplication extends Application<MyAppConfig> {
 
     @Override
     public String getName() {
-        return "Dropwizard Trails";
+        return "User Mgmt App";
     }
 
     @Override
     public void initialize(final Bootstrap<MyAppConfig> bootstrap) {
-        // TODO: application initialization
+        GuiceBundle guiceBundle =  GuiceBundle.builder().
+                modules(new MyGuiceModule()).build();
+        bootstrap.addBundle(guiceBundle);
     }
 
     @Override
