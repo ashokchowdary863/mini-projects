@@ -95,11 +95,22 @@ smembers users
 
 #diff
 sadd set1 a1 a2 a3
-sadd set2 a1 a5 a6
+sadd set2 a1 a4 a5
 sdiff set1 set2 #set1 - set2
 sdiff set2 set1 #set2 - set1
 
 #check key exist
 sismember users user1
 
+#move key from one set to new set
+smove set1 set2 a2
+
+#remove randomly
+sadd users user1 user2 user3 user4 user5
+spop users
+spop users 2
+
+#remove specific member
+srem users user2
+srem users user2 user1 user3
 ```
