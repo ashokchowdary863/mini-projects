@@ -1,2 +1,2 @@
-# mini-projects
+# Mini projects
 Mini learning projects goes here...
